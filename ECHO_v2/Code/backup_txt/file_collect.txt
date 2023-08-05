@@ -1,0 +1,29 @@
+from tkinter import *
+from PIL import ImageTk,Image
+from tkinter import filedialog
+
+def resizer(img, w_value, h_value):
+    global final
+    raw = Image.open(img)
+    #OPEN and RESIZE image
+    resized = raw.resize(((int(h_value)), (int(w_value))), Image.Resampling.LANCZOS)
+    final = ImageTk.PhotoImage(resized)
+    return final
+
+def file(thumbnail):
+    global filename, real_bg, thum_bg
+    filename = filedialog.askopenfilename(initialdir="/new_files", title="select a file",
+                                                filetypes=(("png files", "*.png"), ("jpeg files", "*.jpeg")))
+    print("you have selected" + filename)
+    
+    real_bg = resizer(filename, 500, 800)
+    thum_bg = resizer(filename, 100, 150)
+
+    thumbnail.config(image= thum_bg)
+
+def apply():
+    saved("home")
+
+def saved(dir):
+    image = Image.open(filename)
+    image.save("new_files/"+dir+"/modified.png")

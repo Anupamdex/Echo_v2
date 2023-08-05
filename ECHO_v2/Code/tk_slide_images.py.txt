@@ -1,0 +1,41 @@
+import tkinter as tk
+from PIL import ImageTk, Image
+
+class ImageSlideshow(tk.Frame):
+    def __init__(self, image_files, base, w_value, h_value):
+        tk.Frame.__init__(self, base)
+        
+        # Create a list to store the ImageTk objects
+        self.images = []
+        
+        # Load the images and convert them into ImageTk objects
+        for file in image_files:
+            image = Image.open(file)
+            image = image.resize((w_value, h_value))  # Adjust the size as per your requirement
+            image_tk = ImageTk.PhotoImage(image)
+            self.images.append(image_tk)
+        
+        self.current_image = 0  # Index of the currently displayed image
+        
+        # Create a label to display the images
+        self.image_label = tk.Label(base, highlightthickness=0, bd=0)
+        self.image_label.pack()
+        
+        # Start the slideshow
+        self.show_image()
+    
+    def show_image(self):
+        # Update the image label with the current image
+        self.image_label.config(image=self.images[self.current_image])
+        
+        # Increment the index to display the next image
+        self.current_image += 1
+        
+        # Reset the index to 0 if it exceeds the number of images
+        if self.current_image >= len(self.images):
+            self.current_image = 0
+        
+        # Schedule the next image display after a certain interval (in milliseconds)
+        self.after(2000, self.show_image)  # Adjust the interval as per your preference
+
+# Example usage

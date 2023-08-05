@@ -1,0 +1,36 @@
+from tkinter import *
+from PIL import ImageTk,Image
+
+class call9():
+    def __init__(self, win, xx, yy):
+        pass
+
+        win.geometry(str(xx)+"x"+str(yy))
+
+        C2 = Canvas(win, width= xx, height= yy, bg="green", border=0, highlightthickness=0)
+        C2.place(x=0,y=0)
+
+        movie = Image.open("files/background.png")
+
+        #OPEN and RESIZE image
+        resized = movie.resize((xx, yy), Image.Resampling.LANCZOS)
+        sam = ImageTk.PhotoImage(resized)
+
+        C2.create_image(0,0, anchor= NW, image= sam)
+
+        #l = Label(C2, image= sam, width= xx, height= yy)
+        #l.place(x=0, y=0)
+
+        Button(C2, text="Exit").place(x= (xx*0.8), y= (yy*(0.8)))
+
+        win.mainloop()
+
+
+
+global xx, yy
+xx = int(input("enter x ?"))
+yy = int(input("enter y ?"))
+
+win = Tk()
+
+e = call9(win, xx, yy)

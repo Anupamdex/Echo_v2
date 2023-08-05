@@ -1,0 +1,30 @@
+from tkinter import *
+from PIL import ImageTk,Image
+from tkinter import filedialog
+
+def main():
+    root = Tk()
+    root.geometry("800x500")
+
+    f = open("C:/Users/mcanu/Desktop/Nebula Py/Code/text_01.txt", 'r')
+    x = f.read()
+ 
+    global l1
+    l1 = Label(root, text= x)
+    l1.place(x=300, y=30)
+
+    def write_it():
+        f = open("C:/Users/mcanu/Desktop/Nebula Py/Code/text_01.txt", 'w+')
+        f.write("good morning everybody")
+        y = f.read()
+        print(y)
+
+    Button(root, text="write", command= write_it).place(x=50, y=50)
+
+
+
+
+
+    root.mainloop()
+
+main()

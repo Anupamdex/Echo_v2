@@ -1,0 +1,26 @@
+from tkinter import *
+from PIL import ImageTk,Image
+from tkinter import filedialog
+from functools import partial
+
+def button_call(page, text, bg):
+
+    F1.config(bg= bg)
+    Label(F1, text= text).place(x=30, y=30)
+
+def call(page):
+    if page == "home":
+        button_call(page, "Home", "yellow")
+    if page == "explore":
+        button_call(page, "Explore", "green")
+
+root = Tk()
+root.geometry("400x300")
+F1 = Frame(root, bg= "red", width= 400, height= 300)
+F1.place(x=0, y=0)
+
+Button(root, text= " call home ", command= partial(call, "home" )).place(x=150, y=150)
+Button(root, text= " call explore ", command= partial(call, "explore" )).place(x=250, y=150)
+
+
+root.mainloop()
