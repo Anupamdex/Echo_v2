@@ -4,12 +4,15 @@ import time
 from PIL import ImageTk,Image
 
 class SlidingImages(tk.Frame):
-    def __init__(self, master):
+    def __init__(self, master, image_width=None, image_height=None):
         super().__init__(master)
         self.master = master
         self.configure(bg="black")
         self.images = []  # List to store the images
         self.current_image_index = 0
+
+        self.image_width = image_width
+        self.image_height = image_height
 
         # Create a label to display the sliding images
         self.image_label = tk.Label(self, bg="black", fg="white", text= "ECHO - The Smart Office Assistant",
@@ -35,13 +38,18 @@ class SlidingImages(tk.Frame):
             self.update_image()
 
     def update_image(self):
-        h_value = self.winfo_screenwidth()
-        w_value = self.winfo_screenheight()
-
+        
         if self.images:
             img = self.images[self.current_image_index]
             raw = Image.open(img)
-            resized = raw.resize((h_value, w_value), Image.Resampling.LANCZOS)
+
+            if self.image_width and self.image_height:
+                resized = raw.resize((self.image_width, self.image_height), Image.Resampling.LANCZOS)
+            else:
+                w_value = self.winfo_screenwidth()
+                h_value = self.winfo_screenheight()
+                resized = raw.resize((w_value, h_value),Image.Resampling.LANCZOS)
+                
             final_image = ImageTk.PhotoImage(resized)
             self.image_label.configure(image=final_image)
             self.image_label.image = final_image  # Keep a reference to prevent garbage collection

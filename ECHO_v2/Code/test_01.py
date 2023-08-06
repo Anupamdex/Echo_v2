@@ -1,6 +1,6 @@
 import tkinter as tk
 import os
-from application import Application
+from application import *
 
 rel_path = os.getcwd()
 
@@ -30,10 +30,10 @@ class Basewindow(tk.Tk):
                 widget.destroy()
 
             # Load the application_page to base window
-            global application_page
-            application_page = Application(self)
-            application_page.pack(expand=True, fill=tk.BOTH)
-
+            set_screen_size(screen_width, screen_height)
+            self.application_page = Application(self, screen_width, screen_height)
+            self.application_page.pack(expand=True, fill=tk.BOTH)
+            
 
 def get_screensize():
     root = tk.Tk()

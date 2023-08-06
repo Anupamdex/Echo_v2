@@ -1,88 +1,49 @@
-from tkinter import *
+import tkinter as tk
 from PIL import ImageTk,Image
-from tkinter import filedialog
-from functools import partial
-import time
-from threading import *
+import os
+from sliding_images import SlidingImages
+import qr
+
+rel_path = os.getcwd()
+
+class testing(tk.Tk):
+    def __init__(self, screen_width, screen_height):
+        super().__init__()
+        
+        self.geometry(str(screen_width)+"x"+str(screen_height))
+        self.configure(bg="black")
+
+        self.content_sub_label = tk.Canvas(self, width=800, height=500, bd=0,)
+        self.content_sub_label.place(relx=0.5, rely=0.5, anchor="center")
+
+        self.show_qr("www.nothing.com", "home" )
 
 
-w_value = 800
-h_value = 500
+    def show_qr(self, link, gallery):
+        qr_label = tk.Label(self.content_sub_label, image= "")
+        qr_label.place(relx=0.5, anchor= "n")
 
-i = 0
+        qr.create(link, qr_label, 160)
+                    
+                    # create image sliding
+        global sliding_images_page
+        sliding_images_page = SlidingImages(self)
+        #sliding_images_page.pack(expand=True, fill=tk.BOTH)
 
-sr_bg = "new_files/speech/speech_reco.png"
+                    # add images
+        images_path = [
+            rel_path + "/new_files/"+gallery+"/a1.png",
+            rel_path + "/new_files/"+gallery+"/a2.png",
+            rel_path + "/new_files/"+gallery+"/a3.png",
+            ]
+        
+        sliding_images_page.set_images(images_path)
 
-def call_sr():
-    #sr.start_up()
-    pass
-
-def bg_resizer(img, w_value, h_value):        
-    raw = Image.open(img)
-    #OPEN and RESIZE image
-    resized = raw.resize(((int(w_value)), (int(h_value))), Image.Resampling.LANCZOS)
-    final = ImageTk.PhotoImage(resized)
-    return final
-
-##
-def filler():
-
-    global S3
-
-    SR1 = Thread(target= call_sr)            # 
-    SR1.start() 
-
-    def start_PA():
-        typing(dynamic_label, "I'm Listening . . .")
-        root.after(100)
-        one()
-        print("one is completeed")
-        root.after(2000)
-        #two()
-
-    root = Tk()
-    root.geometry("800x500")
-    F1 = Frame(root, bg= "yellow", width= 800, height= 500)
-    F1.place(x=0, y=0)
-
-    re_sr_bg = bg_resizer(sr_bg, w_value, h_value)
-    sr_label = Label(F1, image= re_sr_bg, border=0, highlightthickness=0).place(x=0, y=0)
-
-    ab = StringVar()
-    dynamic_label = Label(sr_label, textvariable= ab, font= ("comic sans ms", 18 ), fg="black", bg="#E7E7E7")
-    dynamic_label.place(relx=0.28, rely=0.58)
-
-    def typing(base, content):
-        for i in content:
-            base = ab.get()
-            ab.set(base+i)
-            root.after(50)
-            root.update()
-
-    def one():
-        for i in range(0,8,1):
-            print(i)
-            ab.set("I'm Listening ")
-            typing(dynamic_label, " . . .")
-
-            
-    def two():
-        ab.set("")
-        typing(dynamic_label, "What's your name ? ")
-        print("say your name please")
-
-    S3 = Thread(target= start_PA)
-    S3.start()
-
-    
-    def stop():
-        root.quit()
-    Button(sr_label, text= "continue", command= Thread(target= stop )).place(x=400, y=400)         ##
-    
-    root.mainloop()
-
-##
-#filler()
+        pic_label = tk.Label(self.content_sub_label, image = sliding_images_page, highlightthickness=0, bd=0, width= 600, height= 400)
+        pic_label.place(relx= 0.35, rely= 0.45, anchor= "center")
 
 
-# on testing #
+
+if __name__ == "__main__":
+    app = testing(800, 500)
+    app.mainloop()
