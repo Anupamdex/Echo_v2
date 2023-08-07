@@ -177,9 +177,6 @@ def settings():
             T1.insert('end',CERTIFICATE)
             edit_config(Title_Text, "10", "achieve/certificate", )
 
-        
-
-
 
     #welcome
     welcome_menu.add_command(label="Title text", command= partial(settings_page, "Title Name"))
@@ -194,6 +191,19 @@ def settings():
     achievements_menu.add_command(label="Roll of honour", command= partial(settings_page, "Roll of honour Details"))
     achievements_menu.add_command(label="Placement", command= partial(settings_page, "Placement Details"))
     achievements_menu.add_command(label="Certificates", command= partial(settings_page, "Certificates Details"))
+
+    #about
+    def about_us():
+        global ABOUT_CONTENT
+        ABOUT_CONTENT = "ECHO - The Smart Office Assistant Robot\nMSD Project 2023 - M3B GROUP 06\nMembers >\nDilshith Kumar OK\nAnupam Dev MC\nRithik Kumar K\nAdwaid S\nTheja K\n\nThis Project is done by using Raspberry Pi 3B+ Microprocessor Board, which is used to process and integrate various operations and functions written in Python> including Tkinter APP development, Speech Recognition by Google, Python Text-to-Speech, HDMI 7-inch Touch Display, MG995 Servo motor controlling, etc. "
+        main_frame.place(x=0, y=0)
+        Label(main_frame, text= "About us", font=("Calibri, 18")).place(x=20, y=16)
+        #Label(main_frame, text= "Enter the "+ Title_Text +" you wanted to Display >>").place(x=20, y=80)
+        T1 = Text(main_frame, font=("Monospace", 10), height= 14, width= 65,)
+        T1.place(x=20, y=50)
+        T1.insert('end', ABOUT_CONTENT)
+    
+    about_menu.add_command(label="let's see", command= about_us)
 
     # create frames
     main_frame = Frame(edit, width=500, height=500)

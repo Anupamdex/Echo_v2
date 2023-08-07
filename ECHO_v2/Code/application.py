@@ -9,10 +9,11 @@ from tkinter import messagebox
 from functools import partial
 import edit_app_
 import qr
+import webbrowser
+from tkinter import ttk
 import speech_n_tts
 import echo_servo
 
-m_key = "roger"
 # updated code
 
 rel_path = os.getcwd()
@@ -113,7 +114,7 @@ class Application(tk.Frame):
         clock_thread.daemon = True
         clock_thread.start()
 
-
+    
     def call(self, page):
  
         self.page_label = tk.Label(self, image= self.page_bg, border=0, highlightthickness= 0)
@@ -132,7 +133,7 @@ class Application(tk.Frame):
                         "Centre", "Courses", "Refer & Earn", "4.4", "2.2", "0.2", "0.5", "0.8", "0.45", "0.45", "0.45")
 
         if page == "explore":
-            self.button_call(page, "Explore", self.exp_c1, self.exp_c2, self.exp_c3, 
+            self.webview_call(page, "Explore", self.exp_c1, self.exp_c2, self.exp_c3, 
                         "Student Login", "Documents", "Creators", "4.4", "2.2", "0.2", "0.5", "0.8", "0.45", "0.45", "0.45")
             
         if page == "contact":
@@ -260,7 +261,6 @@ class Application(tk.Frame):
 
                 sliding_images.place(x=0, y=0)
 
-                #slideshow = ImageSlideshow(image_files, pic_label, , )
 
                 quote = tk.Label(qr_canvas, text="Scan this QR code for more", fg="white", bg="#0b0b0b", font=("calibri", 13), wraplength= 100)
                 quote.place(relx= 0.45, rely= 0.8, anchor= "center")
@@ -270,6 +270,7 @@ class Application(tk.Frame):
                 content = g.readlines()
                 title_text = content[index-1].strip()
                 return title_text
+
 
             if page == "home":
                 print("you are accessing home : "+ page_identifier)
@@ -285,13 +286,10 @@ class Application(tk.Frame):
                     print("Displaying Refer & Earn Details")
                     show_qr(get_link(8), "home/refer")
 
-            if page == "explore":
-                print("you are accessing explore : "+ page_identifier)
-                now_in_explore = "e"+page_identifier
-
-                if now_in_explore == "eB1":
-                    print("Displaying Student Login Page")
-
+        
+            # if page == "explore":
+            # Explore page is called within webview_call function (not from button_call() anymore. )
+            
 
             if page == "achieve":
                 print("you are accessing achievemts : "+ page_identifier)
@@ -344,8 +342,71 @@ class Application(tk.Frame):
 
         self.main_exit = tk.Button(self.page_label, image= self.exit_b_image, border=0, highlightthickness=0, activebackground="black", command= exit_main_page)
         self.main_exit.place(relx= 0.9, rely= 0.9, anchor= "center")
-                        
-    ##
+
+
+    def webview_call(self, page, text, C1, C2, C3, FL_1, FL_2, FL_3, W, H, x1, x2, x3, y1, y2, y3):
+        print("Redirected to : "+ text)
+        footer = tk.Label(self.content_label, text= text, font=("calibri", int(int(adaptive_height)/35), "italic"), bg="black", fg="white")
+        footer.place(relx=0.14, rely=0.92, anchor= "center")
+
+        self.re_C1 = self.image_resize(C1, int(int(adaptive_width)/float(W)), int(int(adaptive_height)/float(H)))
+        self.re_C2 = self.image_resize(C2, int(int(adaptive_width)/float(W)), int(int(adaptive_height)/float(H)))
+        self.re_C3 = self.image_resize(C3, int(int(adaptive_width)/float(W)), int(int(adaptive_height)/float(H)))
+
+        tk.Button(self.content_label, image= self.re_C1, border=0, highlightthickness=0, command= partial(self.web_container, page, FL_1, "B1"), activebackground="#0B0B0B").place(relx= x1, rely= y1, anchor= "center")
+        tk.Button(self.content_label, image= self.re_C2, border=0, highlightthickness=0, command= partial(self.web_container, page, FL_2, "B2"), activebackground="#0B0B0B").place(relx= x2, rely= y2, anchor= "center")
+        tk.Button(self.content_label, image= self.re_C3, border=0, highlightthickness=0, command= partial(self.web_container, page, FL_3, "B3"), activebackground="#0B0B0B").place(relx= x3, rely= y3, anchor= "center")
+
+
+        self.main_exit = tk.Button(self.page_label, image= self.exit_b_image, border=0, highlightthickness=0, activebackground="black", command= self.web_exit_main_page)
+        self.main_exit.place(relx= 0.9, rely= 0.9, anchor= "center")
+
+        self.web_view = None
+        
+
+    def web_exit_main_page(self):
+        print("Returned to Main welocme page")
+        self.page_label.place_forget()
+        self.main_exit.place_forget()
+
+    def web_exit_sub_page(self):
+        self.content_sub_label.place_forget()
+        self.sub_footer_label.pack_forget()
+        self.sub_exit.place_forget()
+
+    def web_container(self, page, footer_label, page_identifier):
+        global content_sub_label, sub_exit, sub_footer_label
+
+        self.content_sub_label = tk.Label(self.page_label, image= self.content_box, border=0, highlightthickness= 0)
+        self.content_sub_label.place(relx= 0.5, rely= 0.53, anchor= "center")
+        self.sub_exit = tk.Button(self.page_label, image= self.exit_b_image, border=0
+                                , highlightthickness=0, activebackground="black", command= self.web_exit_sub_page)
+        self.sub_exit.place(relx= 0.9, rely= 0.9, anchor= "center")
+        self.sub_footer_label = tk.Label(self.content_sub_label, text= footer_label, font=("calibri", int(int(adaptive_height)/35), "italic"), bg="black", fg="white")
+        self.sub_footer_label.place(relx=0.14, rely=0.92, anchor= "center")
+
+        if page == "explore":
+            print("you are accessing explore : "+ page_identifier)
+            now_in_explore = "e"+page_identifier
+
+            if now_in_explore == "eB1":
+                print("Displaying Student Login Page")
+                self.open_web_view( "https://erp.nttftrg.com/")                  
+
+            if now_in_explore == "eB2":
+                print("Displaying Project Documents")
+                self.open_web_view( "https://sites.google.com/view/echo-robot/documentation")
+
+            if now_in_explore == "eB3":
+                print("Displaying About Creators")
+                self.open_web_view( "https://sites.google.com/view/echo-robot/the-creators")
+
+    def open_web_view(self, open_url):
+        if not self.web_view:
+            self.web_view = WebView(open_url)
+            
+
+    # X #
     def close_application(self):
         # closes the entire tkinter application
         self.master.destroy()    
@@ -360,6 +421,27 @@ class Application(tk.Frame):
         except Exception as e:
             print("error resizing image: {e}")
             return None
+
+
+class WebView(tk.Toplevel):
+    def __init__(self, url):
+        super().__init__()
+    
+        #self.geometry(str(screen_width)+"x"+str(screen_height))
+        self.configure(bg="black")
+        self.geometry("100x100")
+
+        self.protocol("WM_DELETE_WINDOW", self.on_close)
+        self.web_view = tk.Label(self, text= "web view")
+        self.web_view.pack(fill= "both", expand= True)
+
+        self.open_webpage(url)
+
+    def open_webpage(self, url):
+        webbrowser.open(url)   
+
+    def on_close(self):
+        self.destroy() 
 
 
 def set_screen_size(width, height):
@@ -379,175 +461,5 @@ def set_screen_size(width, height):
 # old version of code
 
 """
-
-def bg_resizer(raw, w_value, h_value):
-    global final     
-    file = ImageTk.getimage(raw)
-    resized = file.resize(((int(w_value)), (int(h_value))), Image.Resampling.LANCZOS)
-    final = ImageTk.PhotoImage(resized)
-    return final
-
-
-def app(win, w_value, h_value):                      # call this later # call from speech R after collecting name
-
-    #Resources
-    
-    
-
-    ##
-    
-    def button_call(self, page, text, C1, C2, C3, FL_1, FL_2, FL_3, W, H, x1, x2, x3, y1, y2, y3):
-        global re_C1, re_C2, re_C3
-        print("Redirected to : "+ text)
-        footer = tk.Label(self.content_label, text= text, font=("calibri", int(int(h_value)/35), "italic"), bg="black", fg="white")
-        footer.place(relx=0.14, rely=0.92, anchor= "center")
-
-        re_C1 = bg_resizer(C1, int(int(w_value)/float(W)), int(int(h_value)/float(H)))
-        re_C2 = bg_resizer(C2, int(int(w_value)/float(W)), int(int(h_value)/float(H)))
-        re_C3 = bg_resizer(C3, int(int(w_value)/float(W)), int(int(h_value)/float(H)))
-
-        def exit_sub_page():
-            content_sub_label.place_forget()
-            sub_footer_label.pack_forget()
-            sub_exit.place_forget()
-
-        def container(footer_label, page_identifier):
-            global content_sub_label, sub_exit, sub_footer_label
-            #Label(content_label, width= 800, height= 500).place(x=0, y=0)
-            content_sub_label = Label(page_label, image= re_content_box, border=0, highlightthickness= 0)
-            content_sub_label.place(relx= 0.5, rely= 0.5, anchor= CENTER)
-            sub_exit = Button(page_label, image= e_b, border=0
-                                , highlightthickness=0, activebackground="black", command= exit_sub_page)
-            sub_exit.place(relx= 0.9, rely= 0.85, anchor= CENTER)
-            sub_footer_label = Label(content_sub_label, text= footer_label, font=("calibri", int(int(h_value)/35), "italic"), bg="black", fg="white")
-            sub_footer_label.place(relx=0.14, rely=0.92, anchor= CENTER)
-
-            def show_qr(link, gallery):
-                qr_canvas = Canvas(content_sub_label, bg="#0b0b0b", highlightthickness=0, bd=0, width= int(int(w_value)/5), height= int(int(h_value)/2))
-                qr_canvas.place(relx= 0.8, rely= 0.45, anchor= CENTER)
-                qr_label = Label(qr_canvas, image= "")
-                qr_label.place(relx=0.5, anchor= "n")
-                qr.create(link, qr_label, 160)
-
-                pic_label = Label(content_sub_label, highlightthickness=0, bd=0, width= int(int(h_value) - int(int(w_value)/5)), height= int(int(h_value)/2))
-                pic_label.place(relx= 0.35, rely= 0.45, anchor= CENTER)
-                    
-                path = "new_files/"+gallery+"/"
-                image_files = [path+'a1.png',path+'a2.png',path+'a3.png']  # Replace with your image filenames
-
-                #slideshow = ImageSlideshow(image_files, pic_label, int(int(h_value) - int(int(w_value)/5)), int(int(h_value)/2))
-
-                quote = Label(qr_canvas, text="Scan this QR code for more", fg="white", bg="#0b0b0b", font=("calibri", 13), wraplength= 100)
-                quote.place(relx= 0.45, rely= 0.8, anchor= CENTER)
-
-            def get_link(index):
-                g = open("data.txt", "r")
-                content = g.readlines()
-                title_text = content[index-1].strip()
-                return title_text
-
-            if page == "home":
-                print("you are accessing home : "+ page_identifier)
-                now_in_home = "h"+page_identifier
-
-                if now_in_home == "hB1":
-                    print("Displaying Centre Details")
-                    show_qr(get_link(5), "home/centre")
-                if now_in_home == "hB2":
-                    print("Displaying Course Details")
-                    show_qr(get_link(6), "home/course")
-                if now_in_home == "hB3":
-                    print("Displaying Refer & Earn Details")
-                    show_qr(get_link(7), "home/refer")
-
-            if page == "achieve":
-                print("you are accessing achievemts : "+ page_identifier)
-                now_in_achieve = "a"+page_identifier
-
-                if now_in_achieve == "aB1":
-                    print("Displaying Roll of Honour Details")
-                    show_qr(get_link(8), "achieve/roll")
-                if now_in_achieve == "aB2":
-                    print("Displaying Placement Details")
-                    show_qr(get_link(9), "achieve/placement")
-                if now_in_achieve == "aB3":
-                    print("Displaying Certificate Details")
-                    show_qr(get_link(10), "achieve/certificate")
-
-            if page == "explore":
-                print("you are accessing explore : "+ page_identifier)
-                now_in_explore = "e"+page_identifier
-
-                if now_in_explore == "aB1":
-                    print("Displaying Student Login Page")
-
-
-            if page == "more":
-                print("you are accessing more page : "+ page_identifier)
-                now_in_more = "m"+page_identifier
-                if now_in_more == "mB3":
-                    print("you are trying to destroy the application running")
-                    # showinfow, showwarning, showerror, askquestion, askokcancel, askyesno
-                    def popup_1():
-                        response = messagebox.askyesno("Exit Mainloop" ,"Application currently running will be closed ! \nDo you want to continue ?")
-                        if response == 1:
-                            win.quit()
-                    popup_1()
-                if now_in_more == "mB2":
-                    print("you are trying to EDIT the application !")
-                    def popup_2():
-                        response = messagebox.askyesno("Edit Application" ,"You should Restart the Application after editing ! \nDo you want to continue ?")
-                        if response == 1:
-                            edit_app_.settings()
-                    popup_2()
-                if now_in_more == "mB1":
-                    print("Let's Setup the servo motors !")
-                    def popup_2():
-                        response = messagebox.askyesno("Servo Setup" ,"Let's Setup the servo motors ! \nDo you want to continue ?")
-                        if response == 1:
-
-                            pass
-                            
-                    popup_2()
-
-        Button(content_label, image= re_C1, border=0, highlightthickness=0, command= partial(container, FL_1, "B1"), activebackground="#0B0B0B").place(relx= x1, rely= y1, anchor= CENTER)
-        Button(content_label, image= re_C2, border=0, highlightthickness=0, command= partial(container, FL_2, "B2"), activebackground="#0B0B0B").place(relx= x2, rely= y2, anchor= CENTER)
-        Button(content_label, image= re_C3, border=0, highlightthickness=0, command= partial(container, FL_3, "B3"), activebackground="#0B0B0B").place(relx= x3, rely= y3, anchor= CENTER)
-
-
-        global e_b
-        e_b = bg_resizer(exit_b, int(int(w_value)/8), int(int(h_value)/8))
-        main_exit = Button(page_label, image= e_b, border=0, highlightthickness=0, activebackground="black", command= exit_main_page)
-        main_exit.place(relx= 0.9, rely= 0.85, anchor= CENTER)
-
-        if page == "home":
-            button_call(page, "Home", home_c1, home_c2, home_c3, 
-                        "Centre", "Courses", "Refer & Earn", "4.4", "2.2", "0.2", "0.5", "0.8", "0.45", "0.45", "0.45")
-
-        if page == "explore":
-            button_call(page, "Explore", exp_c1, exp_c2, exp_c3, 
-                        "Student Login", "Documents", "Creators", "4.4", "2.2", "0.2", "0.5", "0.8", "0.45", "0.45", "0.45")
-            
-        ##
-                        
-        ##
-
-        if page == "achieve":
-            button_call(page, "Achievements", ach_c1, ach_c2, ach_c3, 
-                        "Roll of honour", "Placements", "Certificates", "4.4", "2.2", "0.2", "0.5", "0.8", "0.45", "0.45", "0.45")
-
-
-        if page == "more":
-            button_call(page, "More", more_1, more_2, more_3, 
-                        "Servo Syncing", "Advanced  Settings", "Exit from Mainloop", "2", "6", "0.4", "0.4", "0.4", "0.2", "0.45", "0.7")
-
-
-    button_size = int(w_value)+int(h_value)
-    bt_s = int(button_size/20)
-
-  
-    win.mainloop()
-
-
 
 """

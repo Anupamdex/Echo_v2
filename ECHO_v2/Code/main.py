@@ -138,9 +138,6 @@ class OpeningPage(tk.Frame):
         self.after(5300, self.required_threads, "Tell me your good Name please . . .", )
 
 
-        
-
-
     def typing(self, ab, content):
         for i in content:
             base = ab.get()

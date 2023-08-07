@@ -1,49 +1,44 @@
 import tkinter as tk
 from PIL import ImageTk,Image
 import os
-from sliding_images import SlidingImages
-import qr
+import tkinterhtml as html
+from tkinter import ttk
+import webbrowser
 
-rel_path = os.getcwd()
 
-class testing(tk.Tk):
-    def __init__(self, screen_width, screen_height):
+    
+class WebPage(tk.Frame):
+    def __init__(self, master):
+        super().__init__(master)
+
+
+class WebFrame(tk.Tk):
+    def __init__(self):
         super().__init__()
         
-        self.geometry(str(screen_width)+"x"+str(screen_height))
+        #self.geometry(str(screen_width)+"x"+str(screen_height))
         self.configure(bg="black")
+        self.geometry("65x65")
 
-        self.content_sub_label = tk.Canvas(self, width=800, height=500, bd=0,)
-        self.content_sub_label.place(relx=0.5, rely=0.5, anchor="center")
+        # create a notebook widget 
+        self.notebook = ttk.Notebook(self)
+        self.mainpage = WebPage(self)
 
-        self.show_qr("www.nothing.com", "home" )
+        self.fsub = tk.Frame(self, height= 65, width= 65, bg= "black")
+        self.fsub.place(x=0, y=0)
 
-
-    def show_qr(self, link, gallery):
-        qr_label = tk.Label(self.content_sub_label, image= "")
-        qr_label.place(relx=0.5, anchor= "n")
-
-        qr.create(link, qr_label, 160)
-                    
-                    # create image sliding
-        global sliding_images_page
-        sliding_images_page = SlidingImages(self)
-        #sliding_images_page.pack(expand=True, fill=tk.BOTH)
-
-                    # add images
-        images_path = [
-            rel_path + "/new_files/"+gallery+"/a1.png",
-            rel_path + "/new_files/"+gallery+"/a2.png",
-            rel_path + "/new_files/"+gallery+"/a3.png",
-            ]
+        self.button = tk.Button(self.fsub, text = "go to", command= self.open_webpage)
+        self.button.place(x=0, y=0)
         
-        sliding_images_page.set_images(images_path)
 
-        pic_label = tk.Label(self.content_sub_label, image = sliding_images_page, highlightthickness=0, bd=0, width= 600, height= 400)
-        pic_label.place(relx= 0.35, rely= 0.45, anchor= "center")
+    def open_webpage(self):
 
+        self.notebook.add(self.mainpage, state= "hidden",)
+        self.notebook.place(x=0, y=0)
+        webbrowser.open("www.x.com")
 
 
 if __name__ == "__main__":
-    app = testing(800, 500)
+ 
+    app = WebFrame()
     app.mainloop()
