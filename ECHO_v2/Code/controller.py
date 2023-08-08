@@ -3,7 +3,7 @@ import speech_recognition as sr
 import pyttsx3
 
 def speak(text):
-    engine = pyttsx3.init()
+    engine = pyttsx3.init(driverName= 'espeak') #for windows use sapi5
     engine.setProperty('rate', 150)
     engine.say(text)
     engine.runAndWait()
