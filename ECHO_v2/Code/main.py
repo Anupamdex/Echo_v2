@@ -13,6 +13,9 @@ from application import *
 #import concurrent.futures
 
 
+#controller.ask_name() from def inst_sr(self): before self.import_main_application()  is 
+# Make it Hashed  to override sr and direct jump to main app.
+
 rel_path = os.getcwd()
 
 class Basewindow(tk.Tk):
@@ -47,7 +50,7 @@ class Basewindow(tk.Tk):
 
         # create image sliding
         global sliding_images_page
-        sliding_images_page = SlidingImages(self)
+        sliding_images_page = SlidingImages(self, screen_width, screen_height )
         sliding_images_page.pack(expand=True, fill=tk.BOTH)
 
         # add images
@@ -67,10 +70,13 @@ class Basewindow(tk.Tk):
         # Load the main application page to base window
         set_screen_size(screen_width, screen_height)
 
-        #global main_app_page
+        print("Main app is imported successfully.")
+        
+        self.app_label = tk.Frame(self, bg="black", height= screen_height, width= screen_width)
+        self.app_label.place(x=0, y=0)
+
         self.main_app_page = Application(self, screen_width, screen_height)
         self.main_app_page.place(x=0, y=0)
-
 
 
     def start_distance_measurement(self):
@@ -97,6 +103,7 @@ class Basewindow(tk.Tk):
             elif self.distance_value >= 100 and object_nearby:
                 object_nearby = False
                 print("object is far away")
+                self.close_and_restart_app()
             time.sleep(1)
 
 
@@ -107,8 +114,30 @@ class Basewindow(tk.Tk):
         self.opening_page = OpeningPage(self)
         self.opening_page.pack()
 
-    #def import_main_application(self):
-        #self.opening_page.pack_forget()
+    def close_and_restart_app(self):
+        print("Ultrasonic Measurement becomes more than 100 (launch condition not satisfied)")
+        if self.winfo_exists():
+            for child in self.winfo_children():
+
+                #self.after(3000, child.destroy)
+
+            #self.after(5000, self.restart_app)
+                pass
+
+        else:
+            print("window already in closed state")
+
+    def restart_app(self):
+        print("App is Restarting Now !")
+
+        self.opening_page = None  # Create the opening page instance
+        self.show_logo()
+
+        self.distance_value = 0
+        self.after(2000, self.start_distance_measurement)
+
+    def close_application(self):
+        self.destroy()
 
 
 class OpeningPage(tk.Frame):
@@ -168,7 +197,7 @@ class OpeningPage(tk.Frame):
 
     def inst_sr(self):
         controller.ask_name()
-        #print("collected name and speech recognition is completed.")
+        print("collected name and speech recognition is completed.")
 
         self.import_main_application()        
 
@@ -176,24 +205,11 @@ class OpeningPage(tk.Frame):
         for widget in self.winfo_children():
             widget.destroy()
 
-        print("collected name and speech recognition is completed.")
-
-        # Load the main application page to base window
-        #set_screen_size(screen_width, screen_height)
-
-        #global main_app_page
-        #self.main_app_page = Application(self, screen_width, screen_height)
-        #self.main_app_page.place(x=0, y=0)
-
-        #self.main_app_page.pack(expand=True, fill=tk.BOTH)
+        #BaseWindowInstance = Basewindow(screen_width, screen_height)
+        #BaseWindowInstance.show_main_app()
 
         show_main_app(self)     
         #self: Self@Basewindow) -> None
-
-        
-
-
-    
 
 def get_screensize():
     root = tk.Tk()

@@ -4,7 +4,7 @@ import time
 from PIL import ImageTk,Image
 
 class SlidingImages(tk.Frame):
-    def __init__(self, master, image_width=None, image_height=None):
+    def __init__(self, master, image_width, image_height):
         super().__init__(master)
         self.master = master
         self.configure(bg="black")
@@ -46,8 +46,8 @@ class SlidingImages(tk.Frame):
             if self.image_width and self.image_height:
                 resized = raw.resize((self.image_width, self.image_height), Image.Resampling.LANCZOS)
             else:
-                w_value = self.winfo_screenwidth()
-                h_value = self.winfo_screenheight()
+                w_value = "800"
+                h_value = "500"
                 resized = raw.resize((w_value, h_value),Image.Resampling.LANCZOS)
                 
             final_image = ImageTk.PhotoImage(resized)

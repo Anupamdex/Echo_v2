@@ -67,7 +67,7 @@ class Application(tk.Frame):
 
 
         self.app_bg = tk.Label(self, image=self.welcome_bg_image, bg="black", highlightthickness=0, borderwidth=0)
-        self.app_bg.place(relx=0.5, rely=0.5, anchor="center")
+        self.app_bg.pack(fill= tk.BOTH ,expand=True)
 
         tk.Button(self, image=self.main_b1_image, bg="black", highlightthickness=0, borderwidth=0,
                   activebackground="#0B0B0B", command=  partial(self.call, "home")).place(relx= 0.2, rely=0.8)
@@ -92,13 +92,13 @@ class Application(tk.Frame):
         print(greeting_text)
         print(time_specifier)
 
-        L1 = tk.Label(self, text= title_text , font=("Times", int(screen_height/20)), bg="#0B0B0B", fg="white")
+        L1 = tk.Label(self, text= title_text , font=("Times", int(adaptive_height/20)), bg="#0B0B0B", fg="white")
         L1.place(relx= 0.5, rely= 0.11, anchor= "center")
 
-        L2 = tk.Label(self, text= greeting_text , font=("Calibri", int(screen_height/10)), bg="black", fg="white")
+        L2 = tk.Label(self, text= greeting_text , font=("Calibri", int(adaptive_height/10)), bg="black", fg="white")
         L2.place(relx= 0.5, rely= 0.48, anchor= "center")
 
-        L3 = tk.Label(self, text= time_specifier , font=("calibri", int(screen_height/20)), bg="black", fg="white")
+        L3 = tk.Label(self, text= time_specifier , font=("calibri", int(adaptive_height/20)), bg="black", fg="white")
         L3.place(relx= 0.5, rely= 0.6, anchor= "center")
 
 
@@ -209,7 +209,6 @@ class Application(tk.Frame):
             self.button_call(page, "More", self.more_1, self.more_2, self.more_3, 
                         "Servo Syncing", "Advanced  Settings", "Exit from Mainloop", "2", "6", "0.4", "0.4", "0.4", "0.2", "0.45", "0.7")
 
-    
     ##
     def button_call(self, page, text, C1, C2, C3, FL_1, FL_2, FL_3, W, H, x1, x2, x3, y1, y2, y3):
         print("Redirected to : "+ text)
@@ -240,12 +239,12 @@ class Application(tk.Frame):
             sub_footer_label = tk.Label(content_sub_label, text= footer_label, font=("calibri", int(int(adaptive_height)/35), "italic"), bg="black", fg="white")
             sub_footer_label.place(relx=0.14, rely=0.92, anchor= "center")
 
-            def show_qr(link, gallery):
+            def show_qr(link, gallery):  
                 qr_canvas = tk.Canvas(content_sub_label, bg="#0b0b0b", highlightthickness=0, bd=0, width= int(int(adaptive_width)/5), height= int(int(adaptive_height)/2))
                 qr_canvas.place(relx= 0.8, rely= 0.45, anchor= "center")
                 qr_label = tk.Label(qr_canvas, image= "")
                 qr_label.place(relx=0.5, anchor= "n")
-                qr.create(link, qr_label, 160)
+                qr.create(link, qr_label, int(int(adaptive_width)/5))
 
                 pic_label = tk.Frame(content_sub_label, highlightthickness=0, bd=0, width= int(int(adaptive_height) - int(int(adaptive_width)/5)), height= int(int(adaptive_height)/2))
                 pic_label.place(relx= 0.35, rely= 0.45, anchor= "center")
@@ -362,7 +361,6 @@ class Application(tk.Frame):
 
         self.web_view = None
         
-
     def web_exit_main_page(self):
         print("Returned to Main welocme page")
         self.page_label.place_forget()
@@ -408,8 +406,7 @@ class Application(tk.Frame):
     # X #
     def close_application(self):
         # closes the entire tkinter application
-        self.master.destroy()    
-
+        self.master.destroy()   
 
 
     def image_resize(self, image_path, width, height):
@@ -441,7 +438,7 @@ class WebView(tk.Toplevel):
 
     def on_close(self):
         self.destroy() 
-
+        
 
 def set_screen_size(width, height):
     global bt_size, adaptive_width, adaptive_height
@@ -452,7 +449,7 @@ def set_screen_size(width, height):
     
 
     print(bt_size)
-    print("bt size is collected successfully")
+    print("resource Resizing size initiated.")
 
         
 
