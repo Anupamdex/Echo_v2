@@ -11,8 +11,7 @@ import edit_app_
 import qr
 import webbrowser
 from tkinter import ttk
-import speech_n_tts
-import echo_servo
+
 
 # updated code
 
@@ -24,10 +23,10 @@ class Application(tk.Frame):
         self.master = master
         self.configure(bg="black")
 
-        print(" This snippet is running from application.py > working fine.")
+        print(" This snippet of code is running from application.py > working fine.")
         
         #Resources
-
+        
         self.welcome_bg_image = self.image_resize(rel_path + "/files/background.png", adaptive_width, adaptive_height )
         self.main_b1_image = self.image_resize(rel_path + "/files/img0.png", bt_size, bt_size)
         self.main_b2_image = self.image_resize(rel_path + "/files/img1.png", bt_size, bt_size)
@@ -87,7 +86,7 @@ class Application(tk.Frame):
         g = open("data.txt", "r")
         content = g.readlines()
         title_text = content[1].strip()
-        greeting_text = (content[2].strip()) +" " + (content[4].strip())
+        greeting_text = (content[2].strip()) +" " + ((content[4].strip()).capitalize())
         time_specifier = content[3].strip()
         print(title_text)
         print(greeting_text)

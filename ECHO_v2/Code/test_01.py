@@ -4,9 +4,7 @@ from application import *
 
 rel_path = os.getcwd()
 
-
 class Basewindow(tk.Tk):
-
     def __init__(self, width, height):
         super().__init__()
 
@@ -26,13 +24,13 @@ class Basewindow(tk.Tk):
 
     def load_app(self):
             # remove all existing contents from the current window
-            for widget in self.winfo_children():
-                widget.destroy()
+        for widget in self.winfo_children():
+            widget.destroy()
 
-            # Load the application_page to base window
-            set_screen_size(screen_width, screen_height)
-            self.application_page = Application(self, screen_width, screen_height)
-            self.application_page.pack(expand=True, fill=tk.BOTH)
+        # Load the application_page to base window
+        set_screen_size(screen_width, screen_height)
+        self.application_page = Application(self, screen_width, screen_height)
+        self.application_page.pack(expand=True, fill=tk.BOTH)
             
 
 def get_screensize():

@@ -9,9 +9,9 @@ from PIL import ImageTk,Image
 from sliding_images import SlidingImages
 from functools import partial
 import controller
+from application import *
+#import concurrent.futures
 
-import concurrent.futures
-import pyttsx3
 
 rel_path = os.getcwd()
 
@@ -62,6 +62,17 @@ class Basewindow(tk.Tk):
         distance_label = tk.Label(self, text="Measured Distance is : cm")
         distance_label.place(relx=0.1, rely=0.9, anchor="center")
 
+    global show_main_app
+    def show_main_app(self):
+        # Load the main application page to base window
+        set_screen_size(screen_width, screen_height)
+
+        #global main_app_page
+        self.main_app_page = Application(self, screen_width, screen_height)
+        self.main_app_page.place(x=0, y=0)
+
+
+
     def start_distance_measurement(self):
         # create background thread
         bg_thread = threading.Thread(target=self.background_task)
@@ -96,6 +107,9 @@ class Basewindow(tk.Tk):
         self.opening_page = OpeningPage(self)
         self.opening_page.pack()
 
+    #def import_main_application(self):
+        #self.opening_page.pack_forget()
+
 
 class OpeningPage(tk.Frame):
     def __init__(self, parent):
@@ -115,12 +129,6 @@ class OpeningPage(tk.Frame):
         self.dynamic_label.place(relx=0.28, rely=0.58)
 
         self.after(300, self.update_content)
-        
-    def inst_typing(self, ab, content):
-        self.typing( ab, content)
-
-    def inst_speak(self, content):
-        controller.speak(content)
 
     def required_threads(self, out_content):
         subThread_1 = threading.Thread(target= self.inst_typing, args=( ab, out_content))
@@ -129,14 +137,23 @@ class OpeningPage(tk.Frame):
         subThread_1.start()
         subThread_2.start()
 
-        
     def update_content(self):
 
         self.required_threads("Hello Friend, Welcome to NTTF ", )
         self.after(4000, ab.set , " ") 
         
-        self.after(5300, self.required_threads, "Tell me your good Name please . . .", )
+        self.after(6000, self.required_threads, "Tell me your good Name please . . .", )
 
+        self.after(8000, self.sr_thread)
+
+        self.after(11500, ab.set , " ")
+        self.after(11800, self.inst_typing, ab, "listening.. " )
+        
+    def inst_typing(self, ab, content):
+        self.typing( ab, content)
+
+    def inst_speak(self, content):
+        controller.speak(content)
 
     def typing(self, ab, content):
         for i in content:
@@ -145,7 +162,38 @@ class OpeningPage(tk.Frame):
             self.after(50)
             self.update()
 
+    def sr_thread(self):
+        subThread_3 = threading.Thread(target= self.inst_sr)
+        subThread_3.start()
 
+    def inst_sr(self):
+        controller.ask_name()
+        #print("collected name and speech recognition is completed.")
+
+        self.import_main_application()        
+
+    def import_main_application(self):
+        for widget in self.winfo_children():
+            widget.destroy()
+
+        print("collected name and speech recognition is completed.")
+
+        # Load the main application page to base window
+        #set_screen_size(screen_width, screen_height)
+
+        #global main_app_page
+        #self.main_app_page = Application(self, screen_width, screen_height)
+        #self.main_app_page.place(x=0, y=0)
+
+        #self.main_app_page.pack(expand=True, fill=tk.BOTH)
+
+        show_main_app(self)     
+        #self: Self@Basewindow) -> None
+
+        
+
+
+    
 
 def get_screensize():
     root = tk.Tk()
