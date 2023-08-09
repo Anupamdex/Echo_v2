@@ -3,7 +3,7 @@ import time
 import os
 #root = Tk()
 
-rel_path = os.path.realpath(os.path.join(os.getcwd(), 'files'))
+rel_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files')
 
 def write_it(content):
     f = open(os.path.join(rel_path, "data.txt"), "r")

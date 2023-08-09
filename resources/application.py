@@ -15,7 +15,8 @@ from tkinter import ttk
 
 # updated code
 
-rel_path = os.path.realpath(os.path.join(os.getcwd(), 'files'))
+rel_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files')
+
 
 class Application(tk.Frame):
     def __init__(self, master, screen_width, screen_height):
@@ -239,7 +240,7 @@ class Application(tk.Frame):
             sub_footer_label = tk.Label(content_sub_label, text= footer_label, font=("calibri", int(int(adaptive_height)/35), "italic"), bg="black", fg="white")
             sub_footer_label.place(relx=0.14, rely=0.92, anchor= "center")
 
-            def show_qr(link, parent, grandparent):  
+            def show_qr(link, grandparent, parent):  
                 qr_canvas = tk.Canvas(content_sub_label, bg="#0b0b0b", highlightthickness=0, bd=0, width= int(int(adaptive_width)/5), height= int(int(adaptive_height)/2))
                 qr_canvas.place(relx= 0.8, rely= 0.45, anchor= "center")
                 qr_label = tk.Label(qr_canvas, image= "")

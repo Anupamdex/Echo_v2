@@ -3,7 +3,7 @@ import speech_recognition as sr
 import pyttsx3
 
 import os
-rel_path = os.path.realpath(os.path.join(os.getcwd(), 'files'))
+rel_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files')
 
 def speak(text):
     engine = pyttsx3.init() #for raspberry pi, pass argument : driverName= 'espeak'

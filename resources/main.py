@@ -16,7 +16,7 @@ from application import *
 #controller.ask_name() from def inst_sr(self): before self.import_main_application()  is 
 # Make it Hashed  to override sr and direct jump to main app.
 
-rel_path = os.path.realpath(os.path.join(os.getcwd(), 'files'))
+rel_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files')
 
 
 class Basewindow(tk.Tk):
