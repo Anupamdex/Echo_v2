@@ -145,7 +145,7 @@ class OpeningPage(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent, bg="black")
 
-        raw = Image.open(os.path.join(rel_path, "speech/speech_reco.png"))
+        raw = Image.open(os.path.join(rel_path, "speech", "speech_reco.png"))
         resized = raw.resize((screen_width, screen_height), Image.Resampling.LANCZOS)
        
         self.opening_image = ImageTk.PhotoImage(resized)
@@ -198,7 +198,7 @@ class OpeningPage(tk.Frame):
 
     def inst_sr(self):
         controller.ask_name()
-        print("collected name and speech recognition is completed.")
+        print("Proccess of speech recognition is executed.")
 
         self.import_main_application()        
 
